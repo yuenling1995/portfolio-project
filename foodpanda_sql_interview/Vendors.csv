@@ -1,0 +1,8 @@
+id,rdbms_id,country_name,is_active,vendor_name,budget,chain_id
+1020,15,Singapore,TRUE,WS (BM),1,118
+941,15,Singapore,FALSE,Canada Paste,1,
+2870,18,Taiwan,FALSE,I LOVE PIZZAAAAAAAAAAA,1,
+606,15,Singapore,FALSE,PastaPastaPasta,3,
+3812,18,Taiwan,TRUE,Sweet Chinese Desserts,2,18
+13,15,Singapore,TRUE,IC House,2,12
+227,17,Thailand,TRUE,9th Cafe House,3,212

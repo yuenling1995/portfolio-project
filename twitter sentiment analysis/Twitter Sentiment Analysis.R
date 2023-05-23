@@ -34,20 +34,19 @@ setwd('/Users/Jessicaboomboom/Library/Preferences/org.R-project.R/R/rtweet/')
 vignette("auth", package = "rtweet")
 
 # declare variables and store API keys 
-consumer_key <- 'LEd44b09dqKkgC4jU1dG1rAPR'
-consumer_secret <- '1cugDVBvULGgUIYeF2VDX402o7urhMIKTyqiuJQ81kT4KrxfzG'
-access_token <- '1648682292284637184-hRytlEFa13d519YMAWijJRGlT9RN85'
-access_secret <- 'Ha6cg0bL80aM197pxEB9AGmrMPdxbyel5ogrDdy3knkbL'
+consumer_key <- 'xxxxx'
+consumer_secret <- 'xxxxx'
+access_token <- 'xxxxx'
+access_secret <- 'xxxxx'
 
 #authentication process
-consumer_key <- "tksU9B3NyxoHncLabxFIUPFOA"
-consumer_secret <- "93n5kXzGggu17jM4BF3CUjFmpfHoepGJXLUAaJbSNjLKE6WSk4"
+consumer_key <- "xxxxx"
+consumer_secret <- "xxxxx"
 
 auth <- rtweet_app()
 auth_as(auth)
 
-# pull tweets with hashtags
-# Repro_df <- search_tweets(q = "#ReproRights", lang = "en", include_rts = FALSE, n = 100)
+
 # get a specific user's tweets
 raw_df <- 
   get_timeline(user = "@MsMagazine", n = 1000, lang = "en", include_rts = T) 

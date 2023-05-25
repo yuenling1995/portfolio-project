@@ -34,40 +34,38 @@ setwd('/Users/Jessicaboomboom/Library/Preferences/org.R-project.R/R/rtweet/')
 vignette("auth", package = "rtweet")
 
 # declare variables and store API keys 
-consumer_key <- 'xxxxx'
-consumer_secret <- 'xxxxx'
-access_token <- 'xxxxx'
-access_secret <- 'xxxxx'
-
+access_token <- '1648682292284637184-hRytlEFa13d519YMAWijJRGlT9RN85'
+access_secret <- 'Ha6cg0bL80aM197pxEB9AGmrMPdxbyel5ogrDdy3knkbL'
+consumer_key <- "tksU9B3NyxoHncLabxFIUPFOA"
+consumer_secret <- "93n5kXzGggu17jM4BF3CUjFmpfHoepGJXLUAaJbSNjLKE6WSk4"
 #authentication process
-consumer_key <- "xxxxx"
-consumer_secret <- "xxxxx"
-
 auth <- rtweet_app()
 auth_as(auth)
 
-
+# pull tweets with hashtags
+# Repro_df <- search_tweets(q = "#ReproRights", lang = "en", include_rts = FALSE, n = 100)
 # get a specific user's tweets
 raw_df <- 
   get_timeline(user = "@MsMagazine", n = 1000, lang = "en", include_rts = T) 
 
 # show proportion of replies/retweets/organic tweets
-# organic tweets - 850
+# organic tweets - 852
 df_organic <- 
   raw_df %>% 
   filter(!str_detect(full_text, '^RT'))
-# retweets - 149
+# retweets - 147
 df_retweets <- 
   raw_df %>% 
   filter(str_detect(full_text, '^RT'))
 # replies - 34
 df_replies <- 
   subset(raw_df, !is.na(raw_df$in_reply_to_status_id))
+
 # create a df with the # of each type of tweets
 tweet_types <- 
   data.frame(
     category = c("organic", "retweets", "replies"),
-    count = c(850, 149, 34)
+    count = c(852, 147, 34)
   )
 # display as donut chart
 tweet_types$fraction = round(tweet_types$count/sum(tweet_types$count),2)
@@ -87,9 +85,9 @@ ggplot(tweet_types, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=legend_type))
 
 # plot number of tweets by month & day
 #line plot
-ts_plot(df, "days")
+ts_plot(raw_df, "days")
 # bar plot
-ggplot(df, aes(x = created_at)) +
+ggplot(raw_df, aes(x = created_at)) +
   geom_histogram(position = 'identity', bins = 150, 
                  color = 'black', fill = 'lightblue',
                   show.legend = F)
@@ -97,7 +95,7 @@ ggplot(df, aes(x = created_at)) +
 # @MsMagazine posted most often in March and May when comparing to other months. 
 
 # tweets by day
-ggplot(df, aes(x = wday(created_at, label = T))) +
+ggplot(raw_df, aes(x = wday(created_at, label = T))) +
   labs(y = "Count", x = "Day",
        title = "frequency of tweets over time") +
   geom_bar(stat = "count")
@@ -105,7 +103,7 @@ ggplot(df, aes(x = wday(created_at, label = T))) +
 
 
 # data cleaning
-df <- df %>% 
+df <- raw_df %>% 
   filter(!str_detect(full_text, '^RT')) %>%  # remove retweets
   mutate(
     full_text = gsub("^\\s*|\\s*$", "", full_text), # remove leading & trailing whitespace
@@ -119,6 +117,7 @@ df <- df %>%
     full_text = gsub("@[a-z,A-Z]*", "", full_text), # remove other screenames
     full_text = gsub("#[a-z,A-Z]*", "", full_text), # remove hashtags
     full_text = gsub("[[:punct:]]", "", full_text),  # remove punctuation
+    full_text = gsub("[\r\n]", "", full_text),
     full_text = str_to_lower(full_text)
     )  
   
@@ -183,9 +182,12 @@ afinn_value <-
 afinn_value %>% 
   ggplot(aes(x = value, y = counts)) +
   geom_col(aes(fill = counts)) +
+  scale_x_continuous(breaks = c(-5, -4, -3, -2, -1, 0, 1, 2, 3,4)) +
+  scale_y_continuous(breaks = c(0, 50, 100, 150, 200, 250)) +
+  geom_text(aes(label=counts), position=position_dodge(width=0.5), vjust=-0.25, size = 3.3) +
   labs(title = "frequency of sentiment score",
        x = "sentiment score",
-       y = "frequency")
+       y = "frequency") 
 
 # barplot on the distribution of sentiment type
 bing_value <-
@@ -196,8 +198,9 @@ bing_value <-
 bing_value %>% 
   ggplot(aes(x = sentiment, y = counts)) +
   geom_col(aes(fill = counts)) +
-  labs(title = "frequency of sentiment score",
-       x = "sentiment score",
+  geom_text(aes(label=counts), position=position_dodge(width=0.5), vjust=-0.25, size = 3.3) +
+  labs(title = "frequency of sentiment type",
+       x = "sentiment type",
        y = "frequency")
 
 
@@ -210,8 +213,8 @@ bing %>%
   ggplot(aes(n, word, fill = sentiment)) +
   geom_col(show.legend = F) +
   facet_wrap(~sentiment, scales = "free_y") +
-  labs(x = "", y = " ")
-  
+  labs(x = "", y = " ") +
+  geom_text(aes(label=n), hjust = 1.5, size = 3.3) 
 
 
 
